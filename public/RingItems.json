@@ -1,11 +1,14 @@
 [
-    {
-      "username": "taseskics",
-      "name": "Antonio Taseski",
-      "url": "https://antoniotaseski.com",
-      "grad_date": "2027"
-    }
-   
-    
+  {
+    "username": "taseskics",
+    "name": "Antonio Taseski",
+    "url": "https://antoniotaseski.com",
+    "grad_date": "2027"
+  },
+  {
+    "username": "lauriertest",
+    "displayName": "Wilfrid Laurier University",
+    "url": "https://laurier.ca",
+    "grad_date": "2038"
+  }
 ]
-  
