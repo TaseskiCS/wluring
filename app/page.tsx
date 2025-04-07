@@ -33,7 +33,7 @@ export default function Home() {
 
 
   const handleSubmit = async () => {
-    if (!ringItem.name || !ringItem.url || !ringItem.grad_date) {
+    if (!ringItem.displayName || !ringItem.url || !ringItem.grad_date) {
       alert("Please fill in all fields!");
       return;
     }
@@ -92,14 +92,14 @@ export default function Home() {
         <input
             type="text"
             value={ringItem.username}
-            onChange={(e) => setRingItem({ ...ringItem, name: e.target.value })}
-            placeholder="Name"
+            onChange={(e) => setRingItem({ ...ringItem, username: e.target.value })}
+            placeholder="Username"
             className="border-2 border-gray-300 rounded-md p-2 w-80"
         />
         <input
           type="text"
           value={ringItem.displayName}
-          onChange={(e) => setRingItem({ ...ringItem, name: e.target.value })}
+          onChange={(e) => setRingItem({ ...ringItem, displayName: e.target.value })}
           placeholder="Name"
           className="border-2 border-gray-300 rounded-md p-2 w-80"
         />
