@@ -15,9 +15,9 @@ const REPO_NAME = 'wluring';
 
 export async function POST(req: Request) {
   try {
-    const { name, url, grad_date } = await req.json();
+    const { username, displayName, url, grad_date } = await req.json();
 
-    if (!name || !url || !grad_date) {
+    if (!displayName || !url || !grad_date) {
       return NextResponse.json({ message: 'Missing required fields.' }, { status: 400 });
     }
 
@@ -85,7 +85,7 @@ export async function POST(req: Request) {
     const ringItems = JSON.parse(Buffer.from(fileContent.content, 'base64').toString());
 
     // Add the new ring item
-    ringItems.push({ name, url, grad_date });
+    ringItems.push({ username, displayName, url, grad_date });
 
     // Commit the change to the new branch
     const commitMessage = 'Add new ring item to the web ring';

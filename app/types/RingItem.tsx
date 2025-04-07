@@ -1,5 +1,6 @@
 export interface RingItem {
-    name: string;
+    username: string;
+    displayName: string;
     url: string;
     grad_date: string;
 }

@@ -4,7 +4,8 @@ import { RingItem } from "./types/RingItem";
 
 export default function Home() {
   const [ringItem, setRingItem] = useState<RingItem>({
-    name: "",
+    username: "",
+    displayName: "",
     url: "",
     grad_date: "",
   });
@@ -60,9 +61,10 @@ export default function Home() {
       setRingItems((prev) => [...prev, ringItem]); 
 
       // Clear
-      
+
       setRingItem({
-        name: "",
+        username: "",
+        displayName: "",
         url: "",
         grad_date: "",
       });
@@ -88,8 +90,15 @@ export default function Home() {
 
       <div className="flex flex-col items-center space-y-4">
         <input
+            type="text"
+            value={ringItem.username}
+            onChange={(e) => setRingItem({ ...ringItem, name: e.target.value })}
+            placeholder="Name"
+            className="border-2 border-gray-300 rounded-md p-2 w-80"
+        />
+        <input
           type="text"
-          value={ringItem.name}
+          value={ringItem.displayName}
           onChange={(e) => setRingItem({ ...ringItem, name: e.target.value })}
           placeholder="Name"
           className="border-2 border-gray-300 rounded-md p-2 w-80"
@@ -120,7 +129,8 @@ export default function Home() {
       {submitted && (
         <div className="mt-8 text-center">
           <h2 className="text-xl font-semibold">Successfully Submitted!</h2>
-          <p>Name: {ringItem.name}</p>
+          <p>Username: {ringItem.username}</p>
+          <p>Name: {ringItem.displayName}</p>
           <p>URL: {ringItem.url}</p>
           <p>Graduation Date: {ringItem.grad_date}</p>
         </div>
