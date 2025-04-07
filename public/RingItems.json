@@ -10,5 +10,11 @@
     "displayName": "Wilfrid Laurier University",
     "url": "https://laurier.ca",
     "grad_date": "2038"
+  },
+  {
+    "username": "newform",
+    "displayName": "New Test",
+    "url": "https://www.youtube.com",
+    "grad_date": "2038"
   }
 ]
