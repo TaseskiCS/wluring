@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { RingItem } from "./types/RingItem";
+import FormPage from "./form/page";
 
 export default function Home() {
   const [ringItem, setRingItem] = useState<RingItem>({
@@ -88,7 +89,9 @@ export default function Home() {
         <pre>{JSON.stringify(ringItems, null, 2)}</pre>
       </div>
 
-      <div className="flex flex-col items-center space-y-4">
+      <FormPage/>
+
+      {/* <div className="flex flex-col items-center space-y-4">
         <input
             type="text"
             value={ringItem.username}
@@ -140,7 +143,7 @@ export default function Home() {
         <div className="mt-4 text-center text-red-500">
           <p>{error}</p>
         </div>
-      )}
+      )} */}
     </>
   );
 }
