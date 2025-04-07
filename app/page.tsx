@@ -1,103 +1,136 @@
-import Image from "next/image";
+"use client";
+import React, { useState, useEffect } from "react";
+import { RingItem } from "./types/RingItem";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [ringItem, setRingItem] = useState<RingItem>({
+    name: "",
+    url: "",
+    grad_date: "",
+  });
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const [submitted, setSubmitted] = useState(false);
+  const [ringItems, setRingItems] = useState<RingItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // fetch existing RingItems 
+  useEffect(() => {
+    const fetchRingItems = async () => {
+      try {
+        const response = await fetch("/RingItems.json");
+        const data = await response.json();
+        setRingItems(data);
+      } catch (err) {
+        console.error("Error fetching ring items", err);
+        setError("Error fetching ring items.");
+      }
+    };
+
+    fetchRingItems();
+  }, []);
+
+
+  const handleSubmit = async () => {
+    if (!ringItem.name || !ringItem.url || !ringItem.grad_date) {
+      alert("Please fill in all fields!");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Send the new data to the endpoint
+      const response = await fetch("/api/createPR", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(ringItem),
+      });
+
+      if (!response.ok) {
+        console.log(response);
+        throw new Error("Failed to submit the data.");
+      }
+
+      // Add the new ring item to the list
+
+      setRingItems((prev) => [...prev, ringItem]); 
+
+      // Clear
+      
+      setRingItem({
+        name: "",
+        url: "",
+        grad_date: "",
+      });
+      setSubmitted(true);
+    } catch (err) {
+      setError("An error occurred while submitting the ring item.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <h1 className="flex justify-center h-screen items-center text-4xl font-bold">
+        wluring: laurier's very own web ring!
+      </h1>
+
+      <div>
+        <h2 className="text-xl font-semibold">Current Web Ring Items:</h2>
+        <pre>{JSON.stringify(ringItems, null, 2)}</pre>
+      </div>
+
+      <div className="flex flex-col items-center space-y-4">
+        <input
+          type="text"
+          value={ringItem.name}
+          onChange={(e) => setRingItem({ ...ringItem, name: e.target.value })}
+          placeholder="Name"
+          className="border-2 border-gray-300 rounded-md p-2 w-80"
+        />
+        <input
+          type="text"
+          value={ringItem.url}
+          onChange={(e) => setRingItem({ ...ringItem, url: e.target.value })}
+          placeholder="URL"
+          className="border-2 border-gray-300 rounded-md p-2 w-80"
+        />
+        <input
+          type="text"
+          value={ringItem.grad_date}
+          onChange={(e) => setRingItem({ ...ringItem, grad_date: e.target.value })}
+          placeholder="Graduation Date"
+          className="border-2 border-gray-300 rounded-md p-2 w-80"
+        />
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-500 text-white rounded-md p-2 w-80 hover:bg-blue-600 transition-all"
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Submit"}
+        </button>
+      </div>
+
+      {submitted && (
+        <div className="mt-8 text-center">
+          <h2 className="text-xl font-semibold">Successfully Submitted!</h2>
+          <p>Name: {ringItem.name}</p>
+          <p>URL: {ringItem.url}</p>
+          <p>Graduation Date: {ringItem.grad_date}</p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      )}
+
+      {error && (
+        <div className="mt-4 text-center text-red-500">
+          <p>{error}</p>
+        </div>
+      )}
+    </>
   );
 }
