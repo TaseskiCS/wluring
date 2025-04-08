@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, Plus, Loader, Globe, ArrowRight, Link as LinkIcon } from "lucide-react";
+import { ExternalLink, Plus, Loader, Globe, ArrowRight, Link as LinkIcon, GithubIcon } from "lucide-react";
 import { RingItem } from "./types/RingItem";
 
 export default function Home() {
@@ -112,6 +112,9 @@ export default function Home() {
             <h1 className="text-5xl font-bold ml-4 bg-clip-text p-2 text-transparent bg-gradient-to-r from-purple-500  to-yellow-500">
               wluring
             </h1>
+            <a href='https://github.com/taseskics/wluring' target="_blank" rel="noopener noreferrer">
+              <GithubIcon className="text-white ml-4" size={20} />
+            </a>
           </motion.div>
           <p className="text-lg text-gray-400 max-w-xl mx-auto">
             Join the webring of Laurier Students and Alumni, staying connected through our websites!
@@ -151,7 +154,7 @@ export default function Home() {
             <div className="absolute -bottom-8 -right-8 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl"></div>
             
             {/* Webring table */}
-            <div className="flex justify-center text-3xl font-semibold"><h2>Connected Personnel</h2></div>
+            <div className="flex justify-center text-xl font-bold bg-clip-text p-2 text-transparent bg-gradient-to-r from-purple-500  to-yellow-500"><h2>Connected Personnel</h2></div>
             <div className="relative backdrop-blur-sm bg-white/10 border border-white/20 rounded-xl overflow-hidden">
               <motion.div className="grid gap-px divide-y divide-white/10">
                 {ringItems.map((item, index) => {
@@ -229,14 +232,24 @@ export default function Home() {
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="flex justify-center"
+          className="flex justify-center items-center flex-col"
         >
           <a href="/form">
-            <button className="flex items-center bg-gradient-to-r from-yellow-500  to-purple-500 text-white font-medium py-3 px-6 rounded-full shadow-lg hover:shadow-indigo-500/30 transition-all duration-300">
+            <button className="flex items-center bg-gradient-to-r mb-4 from-yellow-500  to-purple-500 text-white font-medium py-3 px-6 rounded-full shadow-lg hover:shadow-indigo-500/30 transition-all duration-300">
               <Plus size={18} className="mr-2" />
               Join the webring
             </button>
           </a>
+
+        <div className="flex flex-col items-center text-gray-400 text-sm">
+          <h2>
+              <span className="text-gray-400 text-sm ml-4">
+                * By joining, you agree to share your website with the webring.
+              </span>
+              
+            </h2>
+
+        </div>
         </motion.div>
       </motion.div>
     </div>

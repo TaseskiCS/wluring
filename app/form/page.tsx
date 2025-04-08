@@ -4,8 +4,9 @@ import React, {use, useState} from 'react'
 import { RingItem } from "../types/RingItem";
 import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
-import { Mail, Send, Check, User, Globe, Calendar, Loader, ArrowRight } from "lucide-react";
+import { Mail, Send, ClipboardCopy, Check, User, Globe, Calendar, Loader, ArrowRight } from "lucide-react";
 import { AuthOTP } from '../types/auth';
+import {  } from "lucide-react";
 
 const FormPage = () => {
   const [ringItem, setRingItem] = useState<RingItem>({
@@ -28,6 +29,8 @@ const FormPage = () => {
   const [pendingVerification, setPendingVerification] = useState(false);
   const [emailValid, setEmailValid] = useState(false);
   const emailRegex = /^[a-z]{4}\d{4}@mylaurier\.ca$/i;
+
+
 
 
 
@@ -173,8 +176,8 @@ const FormPage = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-10"
         >
-          <h1 className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500">
-            Join the wluring
+          <h1 className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-yellow-500">
+            Join wluring
           </h1>
           <p className="text-gray-400">
             Connect your website to Laurier's community webring
@@ -198,7 +201,7 @@ const FormPage = () => {
               className="relative z-10 space-y-6"
             >
               <motion.div variants={itemVariants} className="text-center mb-6">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 mb-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 to-yellow-500 mb-4">
                   <Mail size={24} className="text-white" />
                 </div>
                 <h2 className="text-xl font-bold text-white">Verify Your Laurier Email</h2>
@@ -403,36 +406,75 @@ const FormPage = () => {
                 <Check size={40} className="text-white" />
               </motion.div>
               
-              <h2 className="text-2xl font-bold text-white mb-6">Successfully Submitted!</h2>
-              
-              <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-lg p-5 mb-6">
-                <div className="grid gap-3 text-left">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Username:</span>
-                    <span className="text-white font-medium">{ringItem.username}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Display Name:</span>
-                    <span className="text-white font-medium">{ringItem.displayName}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Website:</span>
-                    <span className="text-white font-medium truncate max-w-xs">{ringItem.url}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Graduation Year:</span>
-                    <span className="text-white font-medium">{ringItem.grad_date}</span>
-                  </div>
+              <h2 className="text-2xl font-bold text-white mb-6">
+                Successfully requested to join wluring!
+                </h2>
+
+                <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-lg p-5 mb-6">
+                    <div className="grid gap-3 text-left">
+                        <div className="flex justify-between">
+                            <span className="text-gray-400">Username:</span>
+                            <span className="text-white font-medium">{ringItem.username}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-gray-400">Display Name:</span>
+                            <span className="text-white font-medium">{ringItem.displayName}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-gray-400">Website:</span>
+                            <span className="text-white font-medium truncate max-w-xs">
+                            {ringItem.url}
+                        </span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-gray-400">Graduation Year:</span>
+                            <span className="text-white font-medium">{ringItem.grad_date}</span>
+                        </div>
+                    </div>
                 </div>
-              </div>
+
+                <h3 className="text-xl font-semibold text-white mb-2">Embed These Snippets On Your Site!</h3>
+                <p className="text-gray-400 mb-4 text-sm">
+                Toggle between the previous and next links connected to you in the webring.
+                </p>
+
+                <div className="relative flex gap-2 flex-col">
+                <pre className="bg-[#3d3d3d] text-yellow-400 rounded-md p-4 text-sm overflow-auto">
+                    <code>
+                {`<a href="http://localhost:3000/api/${ringItem.username}/prev">← Prev</a>`}
+                    </code>
+
+                </pre>
+                <pre className="bg-[#3d3d3d] text-purple-400 rounded-md p-4 text-sm overflow-auto">
+                    <code>
+                    {`<a href="http://localhost:3000/api/${ringItem.username}/next">Next →</a>`}
+                    </code>
+                </pre>
+
+                </div>
+
+
+                <motion.a
+                href="/wluring_white.png"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                download="wluring_white.png"
+                className='flex items-center justify-center '>
+                    <h1 className='font-bold'>Download: </h1>
+                    <img src="/wluring_white.png" alt="Webring Logo" className="w-20 h-20 rounded-full " />
+                </motion.a>
+                <p className="text-gray-400 mb-4 text-sm">Click the logo to download it!</p>
+
+               
+
               
               <motion.a
                 href="/"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium py-3 px-6 rounded-full shadow-lg hover:shadow-purple-500/20 transition-all"
+                className="inline-flex  items-center bg-gradient-to-r from-purple-500 to-yellow-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-purple-500/20 transition-all"
               >
-                Back to Webring
+                Back to Home
               </motion.a>
             </motion.div>
           )}
