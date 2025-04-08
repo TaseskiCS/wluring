@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {Plus, Loader, ArrowRight, Link as LinkIcon, GithubIcon } from "lucide-react";
 import { RingItem } from "./types/RingItem";
+import NavBar from "./components/NavBar";
 
 export default function Home() {
   const [ringItems, setRingItems] = useState<RingItem[]>([]);
@@ -77,6 +78,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-slate-900 px-4 py-8 md:px-8">
+      <NavBar />
+      
+      {/* Background decorative elements */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -95,26 +99,10 @@ export default function Home() {
             }}
             className="inline-flex items-center mb-4"
           >
-            <motion.div
-              animate={{ 
-                rotate: [0, 360],
-                transition: { 
-                  repeat: Infinity, 
-                  duration: 20, 
-                  ease: "linear" 
-                } 
-              }}
-              className="relative"
-            >
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-500  to-purple-500 blur-xl opacity-30"></div>
-              <img src='/wluring_white.png' className="w-32 relative z-10"  />
-            </motion.div>
+           
             <h1 className="text-5xl font-bold ml-4 bg-clip-text p-2 text-transparent bg-gradient-to-r from-purple-500  to-yellow-500">
-              wluring
+              <a href='https://laurier.ca' target="_blank" rel="noopener noreferrer">WLU</a> Webring
             </h1>
-            <a href='https://github.com/taseskics/wluring' target="_blank" rel="noopener noreferrer">
-              <GithubIcon className="text-white ml-4" size={20} />
-            </a>
           </motion.div>
           <p className="text-lg text-gray-400 max-w-xl mx-auto">
             Join the webring of Laurier Students and Alumni, staying connected through our websites!

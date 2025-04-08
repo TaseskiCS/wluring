@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import { Mail, Send, Check, User, Globe, Calendar, Loader, ArrowRight } from "lucide-react";
 import { AuthOTP } from '../types/auth';
+import NavBar from '../components/NavBar';
 
 const FormPage = () => {
   const [ringItem, setRingItem] = useState<RingItem>({
@@ -27,7 +28,7 @@ const FormPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [pendingVerification, setPendingVerification] = useState(false);
   const [emailValid, setEmailValid] = useState(false);
-  const emailRegex = /^[a-z]{4}\d{4}@mylaurier\.ca$/i;
+  const emailRegex = /^[a-z]{4}\d{4}/i;
 
 
 
@@ -73,18 +74,12 @@ const FormPage = () => {
   const sendOTP = async () => {
     setLoading(true);
     setError(null);
-    const emailRegex = /^[a-z]{4}\d{4}@mylaurier\.ca$/i;  // check laurier email format
-
-    if (!emailRegex.test(authOTP.email)) {
-        setError("Put in a Laurier email");
-        setLoading(false);
-        return;
-    }
     try {
+      const fullEmail = authOTP.email + "@mylaurier.ca";
       const response = await fetch("/api/sendOTP", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: authOTP.email }),
+        body: JSON.stringify({ email: fullEmail }),
       });
       const data = await response.json();
       if (data.success) {
@@ -100,46 +95,51 @@ const FormPage = () => {
       setLoading(false);
     }
   };
-  
+
   const handleVerify = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("/api/verifyOTP", {
+        const fullEmail = authOTP.email + "@mylaurier.ca";
+        const response = await fetch("/api/verifyOTP", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: authOTP.email,
-          otp: authOTP.otp.toString(),
+            email: fullEmail,
+            otp: authOTP.otp.toString(),
         }),
-      });
-      const data = await response.json();
-      if (data.success) {
+        });
+        const data = await response.json();
+        if (data.success) {
         setShowForm(true);
         setPendingVerification(false);
         toast("OTP verified successfully!");
         setAuthOTP({ ...authOTP, otp: "" });
-      } else {
+        } else {
         setError("Invalid OTP. Please try again.");
-      }
+        }
     } catch (err) {
-      setError("An error occurred while verifying the OTP.");
-      console.error(err);
+        setError("An error occurred while verifying the OTP.");
+        console.error(err);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
   
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const email = e.target.value;
-    setAuthOTP({ ...authOTP, email });
-
-    // realtime error checking
-    if (!emailRegex.test(email)) {
-      setError("Email must be in the format abcd1234@mylaurier.ca");
+    const emailPrefix = e.target.value;
+    // Store just the prefix in the input field
+    setAuthOTP({ ...authOTP, email: emailPrefix });
+    
+    // Validate using the complete email format
+    const fullEmail = emailPrefix + "@mylaurier.ca";
+    const prefixRegex = /^[a-z]{4}\d{4}$/i;
+    
+    if (!prefixRegex.test(emailPrefix)) {
+      setError("Laurier ID must be in the format abcd1234");
       setEmailValid(false);
     } else {
-      setError(null); 
+      setError(null);
       setEmailValid(true);
     }
   };
@@ -169,6 +169,7 @@ const FormPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-900 px-4 py-10 md:px-8">
+      <NavBar/>
       <ToastContainer />
       <motion.div
         initial={{ opacity: 0 }}
@@ -213,15 +214,21 @@ const FormPage = () => {
               </motion.div>
 
               <motion.div variants={itemVariants} className="space-y-4">
-                <div className="relative">
-                  <input 
-                    type="text" 
-                    placeholder="name####@mylaurier.ca" 
-                    value={authOTP.email}
-                    onChange={handleEmailChange} 
-                    className="w-full bg-white/5 border border-white/10 rounded-lg p-3 pl-10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                  />
-                  <Mail size={16} className="absolute left-3 top-3.5 text-gray-400" />
+                <div className='flex flex-row gap-2 justify-center items-center'>
+                    <div className="relative">
+                    <input 
+                        type="text" 
+                        placeholder="abcd####" 
+                        value={authOTP.email}
+                        onChange={handleEmailChange} 
+                        maxLength={8}
+                        className="w-32 bg-white/5 border border-white/10 rounded-lg p-3 pl-10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                    />
+                    <Mail size={16} className="absolute left-3 top-3.5 text-gray-400" />
+                    </div>
+                    <div className="">
+                        <h2>@mylaurier.ca</h2>
+                    </div>
                 </div>
                 
                 {emailValid && (
@@ -263,7 +270,7 @@ const FormPage = () => {
                   <Check size={24} className="text-white" />
                 </div>
                 <h2 className="text-xl font-bold text-white">Enter Verification Code</h2>
-                <p className="text-gray-400 text-sm mt-2">2FA code sent to {authOTP.email}</p>
+                <p className="text-gray-400 text-sm mt-2">2FA code sent to {authOTP.email + "@mylaurier.ca"}</p>
               </motion.div>
 
               <motion.div variants={itemVariants} className="space-y-4">
@@ -446,13 +453,13 @@ const FormPage = () => {
                 <div className="relative flex gap-2 flex-col">
                 <pre className="bg-[#3d3d3d] text-yellow-400 rounded-md p-4 text-sm overflow-auto">
                     <code>
-                {`<a href="http://localhost:3000/api/${ringItem.username}/prev">← Prev</a>`}
+                {`<a href="https://wluring.xyz/api/${ringItem.username}/prev">← Prev</a>`}
                     </code>
 
                 </pre>
                 <pre className="bg-[#3d3d3d] text-purple-400 rounded-md p-4 text-sm overflow-auto">
                     <code>
-                    {`<a href="http://localhost:3000/api/${ringItem.username}/next">Next →</a>`}
+                    {`<a href="https://wluring.xyz/api/${ringItem.username}/next">Next →</a>`}
                     </code>
                 </pre>
 
