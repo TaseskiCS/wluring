@@ -1,12 +1,11 @@
 "use client"
 
-import React, {use, useState} from 'react'
+import React, {useState} from 'react'
 import { RingItem } from "../types/RingItem";
 import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import { Mail, Send, Check, User, Globe, Calendar, Loader, ArrowRight } from "lucide-react";
 import { AuthOTP } from '../types/auth';
-import {  } from "lucide-react";
 
 const FormPage = () => {
   const [ringItem, setRingItem] = useState<RingItem>({
@@ -264,7 +263,7 @@ const FormPage = () => {
                   <Check size={24} className="text-white" />
                 </div>
                 <h2 className="text-xl font-bold text-white">Enter Verification Code</h2>
-                <p className="text-gray-400 text-sm mt-2">We've sent a code to {authOTP.email}</p>
+                <p className="text-gray-400 text-sm mt-2">2FA code sent to {authOTP.email}</p>
               </motion.div>
 
               <motion.div variants={itemVariants} className="space-y-4">

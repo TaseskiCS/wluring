@@ -187,7 +187,7 @@ export default function Home() {
                           </motion.div>
                           <div>
                             <h3 className="font-bold text-white text-lg">
-                              {item.displayName || item.name}
+                              {item.displayName}
                             </h3>
                             <div className="text-gray-400 text-xs">@{item.username}</div>
                           </div>
