@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {Plus, Loader, ArrowRight, Link as LinkIcon, GithubIcon } from "lucide-react";
+import {Plus, Loader, ArrowRight, Link as LinkIcon } from "lucide-react";
 import { RingItem } from "./types/RingItem";
 import NavBar from "./components/NavBar";
 

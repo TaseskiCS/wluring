@@ -1,37 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 # wluring
+
+**wluring** is a lightweight **webring** for **Wilfrid Laurier University** students, allowing personal or club sites to link to one another in a circular, community-driven fashion.
+
+## 🔗 Overview
+
+**wluring** lets students link their personal or club websites together in a loop. Each site displays a "next" and "previous" link, allowing visitors to explore other Laurier sites in the ring.
+
+- 🔄 Circular navigation through all member sites
+- ✨ Simple, clean interface
+- 🔐 Laurier 2FA login using Redis for verification code caching
+
+## 🛠️ Tech Stack
+
+- **Frontend**: [Next.js](https://nextjs.org/)
+- **Backend**: Node.js 
+- **Cache / OTP Store**: [Redis](https://upstash.com/)
+- **Deployment**: [Vercel](https://vercel.com/)
+
+## ⚙️ Features
+
+- Add your website to the ring
+- 2FA-protected admin tools (via laurier email)
+- Seamless navigation to previous/next entries
+- Redis-backed temporary storage for secure 2FA code validation
+- Automatic PR request directly from website 
+
+## ? How you get added ?
+
+No need to make a PR just use the input system after authenticating!
+
+## 🌐 Webring Navigation Snippet
+
+Add this to your website to join the **Laurier Webring**! Replace `your-username` with your actual ring username.
+
+
+→ [Click here to download wluring logo](https://raw.githubusercontent.com/taseskics/wluring/main/docs/wluring_white)
+
+```html
+<!-- Ring Navigation Links for wluring -->
+<div style="margin-top: 2rem; text-align: center;">
+  <a href="https://wluring.xyz/api/your-username/prev" style="margin-right: 1.5rem;">← Previous</a>
+  <a href="https://wluring.xyz"><img src='/wluring_white.png'></a>
+  <a href="https://wluring.xyz/api/your-username/next" style="margin-left: 1.5rem;">Next →</a>
+</div>
+

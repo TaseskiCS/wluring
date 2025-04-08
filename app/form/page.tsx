@@ -28,7 +28,6 @@ const FormPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [pendingVerification, setPendingVerification] = useState(false);
   const [emailValid, setEmailValid] = useState(false);
-  const emailRegex = /^[a-z]{4}\d{4}/i;
 
 
 
@@ -132,7 +131,6 @@ const FormPage = () => {
     setAuthOTP({ ...authOTP, email: emailPrefix });
     
     // Validate using the complete email format
-    const fullEmail = emailPrefix + "@mylaurier.ca";
     const prefixRegex = /^[a-z]{4}\d{4}$/i;
     
     if (!prefixRegex.test(emailPrefix)) {
