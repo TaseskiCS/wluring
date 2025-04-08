@@ -1,8 +1,9 @@
 "use client"
 
-import React, {useState} from 'react'
+import React, {use, useState} from 'react'
 import { RingItem } from "../types/RingItem";
 import { ToastContainer, toast } from 'react-toastify';
+import { AuthOTP } from '../types/auth';
 
 const FormPage = () => {
   const [ringItem, setRingItem] = useState<RingItem>({
@@ -11,13 +12,17 @@ const FormPage = () => {
     url: "",
     grad_date: "",
   });
+
+  const [authOTP, setAuthOTP] = useState<AuthOTP>({
+    otp: "",
+    email: "",
+  });
+  
     
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [otp, setOtp] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
 
 
@@ -60,14 +65,9 @@ const FormPage = () => {
     try {
       const response = await fetch("/api/sendOTP", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({email}),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: authOTP.email }),
       });
-      if (!response.ok) {
-        throw new Error("Failed to send OTP.");
-      }
       const data = await response.json();
       if (data.success) {
         toast("OTP sent to your email!");
@@ -82,26 +82,25 @@ const FormPage = () => {
       setLoading(false);
     }
   };
+  
   const handleVerify = async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch("/api/verifyOTP", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({otp: otp.toString(), email}),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: authOTP.email,
+          otp: authOTP.otp.toString(),
+        }),
       });
-      if (!response.ok) {
-        throw new Error("Failed to verify OTP.");
-      }
       const data = await response.json();
       if (data.success) {
         setShowForm(true);
         setPendingVerification(false);
         toast("OTP verified successfully!");
-        setOtp("");
+        setAuthOTP({ ...authOTP, otp: "" });
       } else {
         setError("Invalid OTP. Please try again.");
       }
@@ -111,15 +110,17 @@ const FormPage = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
+  
   return (
     <div>
         <ToastContainer/>
         {!showForm && (
             <>
                 <h1 className="text-3xl font-bold underline">Enter your Laurier Email</h1>
-                <input type="text" placeholder="name####@mylaurier.ca"  value={email} onChange={(e) => setEmail(e.target.value)} className="border-2 border-gray-300 rounded-md p-2 mt-4" />
-                <div>{email}</div>
+                <input type="text" placeholder="name####@mylaurier.ca"  value={authOTP.email}
+                    onChange={(e) => setAuthOTP({ ...authOTP, email: e.target.value })} className="border-2 border-gray-300 rounded-md p-2 mt-4" />
+                <div>{authOTP.email}</div>
 
                 <button onClick={sendOTP} className='bg-blue-500 text-white rounded-md p-2 mt-4 hover:bg-blue-600 transition-all'>
                     Send Verification Code
@@ -131,7 +132,7 @@ const FormPage = () => {
         {!showForm && pendingVerification && (
             <>
                 <h1 className="text-3xl font-bold underline">Enter the OTP sent to your email</h1>
-                <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} className="border-2 border-gray-300 rounded-md p-2 mt-4" />
+                <input type="text" placeholder="Enter OTP" value={authOTP.otp} onChange={(e) => setAuthOTP({ ...authOTP, otp: e.target.value })} className="border-2 border-gray-300 rounded-md p-2 mt-4" />
                 <button onClick={handleVerify} className='bg-blue-500 text-white rounded-md p-2 mt-4 hover:bg-blue-600 transition-all'>
                     Verify OTP
                 </button>
