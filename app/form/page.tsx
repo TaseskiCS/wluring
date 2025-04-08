@@ -24,7 +24,8 @@ const FormPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pendingVerification, setPendingVerification] = useState(false);
-
+  const [emailValid, setEmailValid] = useState(false);
+  const emailRegex = /^[a-z]{4}\d{4}@mylaurier\.ca$/i;
 
 
 
@@ -62,6 +63,13 @@ const FormPage = () => {
   const sendOTP = async () => {
     setLoading(true);
     setError(null);
+    const emailRegex = /^[a-z]{4}\d{4}@mylaurier\.ca$/i;  // check laurier email format
+
+    if (!emailRegex.test(authOTP.email)) {
+        setError("Put in a Laurier email");
+        setLoading(false);
+        return;
+    }
     try {
       const response = await fetch("/api/sendOTP", {
         method: "POST",
@@ -112,20 +120,39 @@ const FormPage = () => {
     }
   };
   
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const email = e.target.value;
+    setAuthOTP({ ...authOTP, email });
+
+    // realtime error checking
+    if (!emailRegex.test(email)) {
+      setError("Email must be in the format abcd1234@mylaurier.ca");
+      setEmailValid(false);
+    } else {
+      setError(null); 
+      setEmailValid(true);
+    }
+  };
+
   return (
     <div>
         <ToastContainer/>
         {!showForm && (
             <>
                 <h1 className="text-3xl font-bold underline">Enter your Laurier Email</h1>
-                <input type="text" placeholder="name####@mylaurier.ca"  value={authOTP.email}
-                    onChange={(e) => setAuthOTP({ ...authOTP, email: e.target.value })} className="border-2 border-gray-300 rounded-md p-2 mt-4" />
+                <input type="text" placeholder="name####@mylaurier.ca" 
+                value={authOTP.email}
+                onChange={handleEmailChange} className="border-2 border-gray-300 rounded-md p-2 mt-4" />
                 <div>{authOTP.email}</div>
 
-                <button onClick={sendOTP} className='bg-blue-500 text-white rounded-md p-2 mt-4 hover:bg-blue-600 transition-all'>
-                    Send Verification Code
-                </button>
+                {emailValid && (
+                    <button onClick={sendOTP} className='bg-blue-500 text-white rounded-md p-2 mt-4 hover:bg-blue-600 transition-all'>
+                        Send Verification Code
+                    </button>
+                )}
+               
                 
+                {error && <div className="text-red-500 mt-2">{error}</div>}
             </>
         )}
 
