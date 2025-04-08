@@ -4,7 +4,7 @@ import React, {use, useState} from 'react'
 import { RingItem } from "../types/RingItem";
 import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
-import { Mail, Send, ClipboardCopy, Check, User, Globe, Calendar, Loader, ArrowRight } from "lucide-react";
+import { Mail, Send, Check, User, Globe, Calendar, Loader, ArrowRight } from "lucide-react";
 import { AuthOTP } from '../types/auth';
 import {  } from "lucide-react";
 
@@ -186,7 +186,7 @@ const FormPage = () => {
             Join wluring
           </h1>
           <p className="text-gray-400">
-            Connect your website to Laurier's community webring
+            Connect your website to the Laurier community webring
           </p>
         </motion.div>
 
