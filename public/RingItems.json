@@ -4,23 +4,5 @@
     "displayName": "Antonio Taseski",
     "url": "https://antoniotaseski.com",
     "grad_date": "2027"
-  },
-  {
-    "username": "wilfridlaurier",
-    "displayName": "Wilfrid Laurier",
-    "url": "https://laurier.ca",
-    "grad_date": "1864"
-  },
-  {
-    "username": "test1",
-    "displayName": "Elon Musk",
-    "url": "https://tesla.com",
-    "grad_date": "1995"
-  },
-  {
-    "username": "test2",
-    "displayName": "Mark Zuckerberg",
-    "url": "https://meta.com",
-    "grad_date": "2017"
   }
 ]
