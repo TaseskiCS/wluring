@@ -2,6 +2,7 @@
 
 import React, {useState} from 'react'
 import { RingItem } from "../types/RingItem";
+import { ToastContainer, toast } from 'react-toastify';
 
 const FormPage = () => {
   const [ringItem, setRingItem] = useState<RingItem>({
@@ -16,9 +17,15 @@ const FormPage = () => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [otp, setOtp] = useState("");
+  const [pendingVerification, setPendingVerification] = useState(false);
+
+
+
+
   const handleSubmit = async () => {
     if (!ringItem.displayName || !ringItem.url || !ringItem.grad_date) {
-      alert("Please fill in all fields!");
+      toast("Please fill in all fields!");
       return;
     }
 
@@ -47,22 +54,93 @@ const FormPage = () => {
       setLoading(false);
     }
   };
+  const sendOTP = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/sendOTP", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({email}),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to send OTP.");
+      }
+      const data = await response.json();
+      if (data.success) {
+        toast("OTP sent to your email!");
+        setPendingVerification(true);
+      } else {
+        setError("Failed to send OTP. Please try again.");
+      }
+    } catch (err) {
+      setError("An error occurred while sending the OTP.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleVerify = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/verifyOTP", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({otp: otp.toString(), email}),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to verify OTP.");
+      }
+      const data = await response.json();
+      if (data.success) {
+        setShowForm(true);
+        setPendingVerification(false);
+        toast("OTP verified successfully!");
+        setOtp("");
+      } else {
+        setError("Invalid OTP. Please try again.");
+      }
+    } catch (err) {
+      setError("An error occurred while verifying the OTP.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
   return (
     <div>
+        <ToastContainer/>
         {!showForm && (
             <>
                 <h1 className="text-3xl font-bold underline">Enter your Laurier Email</h1>
                 <input type="text" placeholder="name####@mylaurier.ca"  value={email} onChange={(e) => setEmail(e.target.value)} className="border-2 border-gray-300 rounded-md p-2 mt-4" />
                 <div>{email}</div>
 
-                <button onClick={()=>setShowForm(true)} className='bg-blue-500 text-white rounded-md p-2 mt-4 hover:bg-blue-600 transition-all'>
+                <button onClick={sendOTP} className='bg-blue-500 text-white rounded-md p-2 mt-4 hover:bg-blue-600 transition-all'>
                     Send Verification Code
                 </button>
+                
+            </>
+        )}
+
+        {!showForm && pendingVerification && (
+            <>
+                <h1 className="text-3xl font-bold underline">Enter the OTP sent to your email</h1>
+                <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} className="border-2 border-gray-300 rounded-md p-2 mt-4" />
+                <button onClick={handleVerify} className='bg-blue-500 text-white rounded-md p-2 mt-4 hover:bg-blue-600 transition-all'>
+                    Verify OTP
+                </button>
+                {error && <div className="text-red-500 mt-2">{error}</div>}
             </>
         )}
         
 
-        {showForm && (
+        {!pendingVerification && showForm && (
     
             <>
                 <div className="flex flex-col items-center space-y-4">
