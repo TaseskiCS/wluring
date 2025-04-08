@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-
+import { RingItem } from '../../types/RingItem';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 if (!GITHUB_TOKEN) {
@@ -83,6 +83,22 @@ export async function POST(req: Request) {
     );
     const fileContent = await fetchFileResponse.json();
     const ringItems = JSON.parse(Buffer.from(fileContent.content, 'base64').toString());
+
+    // Check for duplicates
+    const isDuplicate = ringItems.some((item: RingItem) =>
+      item?.username?.toLowerCase() === username.toLowerCase() ||
+      item?.displayName?.toLowerCase() === displayName.toLowerCase() ||
+      item?.url?.replace(/\/+$/, "").toLowerCase() === url.replace(/\/+$/, "").toLowerCase()
+    );
+    
+
+    if (isDuplicate) {
+      return new Response(
+        JSON.stringify({ error: 'Duplicate entry: username, display name, or URL already exists.' }),
+        { status: 400 }
+      );
+    }
+
 
     // Add the new ring item
     ringItems.push({ username, displayName, url, grad_date });
