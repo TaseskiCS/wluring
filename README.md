@@ -34,7 +34,7 @@ No need to make a PR just use the input system after authenticating!
 Add this to your website to join the **Laurier Webring**! Replace `your-username` with your actual ring username.
 
 
-→ [Click here to download wluring logo](https://raw.githubusercontent.com/taseskics/wluring/main/docs/wluring_white)
+→ [Click here to download wluring logo](https://raw.githubusercontent.com/taseskics/wluring/main/docs/wluring_white.png)
 
 ```html
 <!-- Ring Navigation Links for wluring -->
